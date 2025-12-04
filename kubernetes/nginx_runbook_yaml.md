@@ -1,4 +1,4 @@
-# 📝 Kubernetes NGINX Pod + Services Runbook (Step-by-Step Guide)
+# 📝 Kubernetes NGINX Pod + Services Runbook (Step-by-Step Guide) 
 
 This runbook shows how to create a basic **NGINX pod** and expose it via:
 
