@@ -163,3 +163,61 @@ kubectl delete namespace demo
   Port-Forward   No                 http://localhost:8080
   NodePort       Yes                http://VM-IP:NodePort
   LoadBalancer   Yes                http://EXTERNAL-IP
+
+  # 🔑 Kubernetes Access Methods (Simple Explanation)
+
+There are **3 common ways** to access your app running in Kubernetes:
+
+------------------------------------------------------------------------
+
+## 1️⃣ **Port Forwarding (kubectl port-forward)**
+
+**Best for:** Local testing, debugging, development.
+
+### ✔️ How it works
+
+You forward a port from **your laptop → directly to the pod or
+service**.
+
+### ✔️ Example
+
+``` bash
+kubectl port-forward pod/nginx-pod 8080:80 -n demo
+```
+
+Open in browser:\
+👉 http://localhost:8080
+
+------------------------------------------------------------------------
+
+## 2️⃣ **NodePort**
+
+**Best for:** Simple access inside a private network (not recommended
+for production).
+
+### ✔️ Example
+
+``` bash
+kubectl expose pod nginx-pod -n demo --type=NodePort --port=80
+kubectl get svc -n demo
+```
+
+Access:\
+👉 http://`<node-ip>`{=html}:`<nodeport>`{=html}
+
+------------------------------------------------------------------------
+
+## 3️⃣ **LoadBalancer**
+
+**Best for:** Production, public access, cloud environments.
+
+### ✔️ Example
+
+``` bash
+kubectl expose pod nginx-pod -n demo --type=LoadBalancer --port=80
+kubectl get svc -n demo
+```
+
+Access:\
+👉 http://`<external-ip>`{=html}
+
