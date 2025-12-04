@@ -1,4 +1,4 @@
-# NGINX Access Runbook (Minikube + Kubernetes)
+# NGINX Access Runbook (Minikube + Kubernetes) 
 
 This guide shows how to deploy a basic NGINX pod in Kubernetes using
 Minikube and how to access it via: - Port-forward - NodePort -
