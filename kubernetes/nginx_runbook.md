@@ -40,7 +40,7 @@ sudo mv minikube-linux-amd64 /usr/local/bin/minikube
 ### Start Minikube
 
 ``` bash
-sudo minikube start --driver=docker
+minikube start --driver=docker
 ```
 
 Verify:
@@ -114,7 +114,7 @@ kubectl expose pod nginx-pod -n demo --type=LoadBalancer --port=80
 Start tunnel:
 
 ``` bash
-sudo minikube tunnel
+minikube tunnel
 ```
 
 Check EXTERNAL-IP:
