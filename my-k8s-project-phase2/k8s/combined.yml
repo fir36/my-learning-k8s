@@ -1,13 +1,20 @@
-# Secret for sensitive data
+```yaml
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo
+---
+# Secret
 apiVersion: v1
 kind: Secret
 metadata:
   name: app-secret
+  namespace: demo
 type: Opaque
 stringData:
   DB_PASSWORD: "SuperSecret123"
 ---
-
 # Persistent Volume
 apiVersion: v1
 kind: PersistentVolume
@@ -17,29 +24,29 @@ spec:
   capacity:
     storage: 1Gi
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   hostPath:
-    path: /tmp/app-data  # Minikube only
+    path: /tmp/app-data
 ---
-
 # Persistent Volume Claim
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: app-pvc
+  namespace: demo
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
 ---
-
-# Deployment with Secret and PVC
+# Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: node-app-deployment
+  namespace: demo
 spec:
   replicas: 3
   selector:
@@ -52,7 +59,7 @@ spec:
     spec:
       containers:
       - name: node-app
-        image: <your-dockerhub-user>/k8s-node-app:v1
+        image: <youruser>/k8s-node-app:v1
         ports:
         - containerPort: 3000
         env:
@@ -68,3 +75,38 @@ spec:
       - name: storage
         persistentVolumeClaim:
           claimName: app-pvc
+---
+# Service (NodePort)
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-app-service
+  namespace: demo
+spec:
+  type: NodePort
+  selector:
+    app: node-app
+  ports:
+  - port: 3000
+    targetPort: 3000
+    nodePort: 30007
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: node-app-ingress
+  namespace: demo
+spec:
+  rules:
+  - host: node-app.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: node-app-service
+            port:
+              number: 3000
+```
