@@ -19,53 +19,59 @@ git clone <your-repo-url>
 cd my-k8s-project
 ```
 
-#### Step 3: Configure Minikube Docker Environment
+### Step 3: Build Docker Image**
 ```bash
-# Linux/Mac
-eval $(minikube docker-env)
-# Windows PowerShell
-# & minikube -p minikube docker-env --shell powershell | Invoke-Expression
+docker build -t <your-dockerhub-user>/k8s-node-app:v1 .
 ```
 
-#### Step 4: Build Docker Image
+### Step 4: Login to Docker Hub**
 ```bash
-docker build -t k8s-node-app:v1 .
+docker login
 ```
 
-#### Step 5: Apply Kubernetes Manifests
+### Step 5: Push the Image**
 ```bash
-kubectl apply -f k8s/combined.yaml
-kubectl get pods
-kubectl get svc
-kubectl get ingress
+docker push <your-dockerhub-user>/k8s-node-app:v1
 ```
 
-#### Step 6: Update Hosts File for Ingress
+### Step 6: Apply Kubernetes YAMLs in Namespace `demo`**
+```bash
+kubectl apply -f k8s/combined.yml
+```
+
+### Step 7: Verify Deployment**
+```bash
+kubectl get pods -n demo
+kubectl get svc -n demo
+kubectl get ingress -n demo
+```
+
+#### Step 8: Update Hosts File for Ingress
 ```
 127.0.0.1 node-app.local
 ```
 
-#### Step 7: Access the Application
+#### Step 9: Access the Application
 - NodePort: `minikube service node-app-service`
 - Ingress: `http://node-app.local`
 
-#### Step 8: Verify Persistent Storage
+#### Step 10: Verify Persistent Storage
 ```bash
 kubectl exec -it <node-app-pod> -- ls /usr/src/app/storage
 ```
 
-#### Step 9: Verify Secret Injection
+#### Step 11: Verify Secret Injection
 ```bash
 kubectl exec -it <node-app-pod> -- printenv DB_PASSWORD
 ```
 
-#### Step 10: Scaling the Deployment
+#### Step 12: Scaling the Deployment
 ```bash
 kubectl scale deployment node-app-deployment --replicas=5
 kubectl get pods
 ```
 
-#### Step 11: Cleanup
+#### Step 13: Cleanup
 ```bash
 kubectl delete -f k8s/combined.yaml
 minikube stop
