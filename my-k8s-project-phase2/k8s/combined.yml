@@ -59,7 +59,7 @@ spec:
     spec:
       containers:
       - name: node-app
-        image: <youruser>/k8s-node-app:v1
+        image: firdaus36/k8s-node-app:v1
         ports:
         - containerPort: 3000
         env:
