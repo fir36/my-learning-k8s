@@ -36,7 +36,7 @@ docker push <your-dockerhub-user>/k8s-node-app:v1
 
 ### Step 6: Apply Kubernetes YAMLs in Namespace `demo`**
 ```bash
-kubectl apply -f k8s/combined.yml
+kubectl apply -f k8s/combined.yml -n demo
 ```
 
 ### Step 7: Verify Deployment**
