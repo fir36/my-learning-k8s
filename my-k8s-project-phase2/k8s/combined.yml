@@ -1,4 +1,3 @@
-```yaml
 # Namespace
 apiVersion: v1
 kind: Namespace
@@ -24,7 +23,7 @@ spec:
   capacity:
     storage: 1Gi
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   hostPath:
     path: /tmp/app-data
 ---
@@ -36,7 +35,7 @@ metadata:
   namespace: demo
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
@@ -58,23 +57,23 @@ spec:
         app: node-app
     spec:
       containers:
-      - name: node-app
-        image: firdaus36/k8s-node-app:v1
-        ports:
-        - containerPort: 3000
-        env:
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: app-secret
-              key: DB_PASSWORD
-        volumeMounts:
-        - name: storage
-          mountPath: /usr/src/app/storage
+        - name: node-app
+          image: firdaus36/k8s-node-app:v1
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: DB_PASSWORD
+          volumeMounts:
+            - name: storage
+              mountPath: /usr/src/app/storage
       volumes:
-      - name: storage
-        persistentVolumeClaim:
-          claimName: app-pvc
+        - name: storage
+          persistentVolumeClaim:
+            claimName: app-pvc
 ---
 # Service (NodePort)
 apiVersion: v1
@@ -87,9 +86,9 @@ spec:
   selector:
     app: node-app
   ports:
-  - port: 3000
-    targetPort: 3000
-    nodePort: 30007
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30007
 ---
 # Ingress
 apiVersion: networking.k8s.io/v1
@@ -99,14 +98,13 @@ metadata:
   namespace: demo
 spec:
   rules:
-  - host: node-app.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: node-app-service
-            port:
-              number: 3000
-```
+    - host: node-app.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: node-app-service
+                port:
+                  number: 3000
